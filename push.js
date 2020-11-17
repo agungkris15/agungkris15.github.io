@@ -1,31 +1,29 @@
-var webPush = require("web-push");
+var webPush = require('web-push');
 
 const vapidKeys = {
-    "publicKey": "BFfVVFZ9YMm_ZL6JHYdkW5IgjzbRlUgMWAMJV1kHSWw-M-wl3A4K7OzXSUobANDbd7OV5njsQJQ6T2PlKxNGrt4",
-    "privateKey": "afzZKRMsAglFXjuYxBFw4GNzlAgLg6rzTZRDN3vzZbg"
+    "publicKey": "BPEh1gf_wiwiSEMuxw749sUE15Uw22CX8HIT75_NTzEW_HSsIjnJTkJMC1KdcyNDiaBWmkuI1RE4nDeODSJ-H3k",
+    "privateKey": "Z8zRtOMLiRW5uic3i-rhILvJUOBR7dJTE-gZs254oqs"
 };
 
+
 webPush.setVapidDetails(
-    "mailto:agungkristanto15@gmail.com",
+    'mailto:example@yourdomain.org',
     vapidKeys.publicKey,
     vapidKeys.privateKey
 )
-
 var pushSubscription = {
-    "endpoint": "https://fcm.googleapis.com/fcm/send/cJoGyEhMsno:APA91bFRrsv-qqQ9dzxMBGCWH9MXMCtqNF9Bx25B0arI3pTR4_RWgGVZq1yiY-wJmYgzurFrgqFk2WVPqLZwtW2UNpaZ2Iv95kUQUW4uaZUk1V8SDhtpZn3nUc14UW-mgHJAB_T0wiHu",
+    "endpoint": "https://fcm.googleapis.com/fcm/send/fcEvHmhFVtU:APA91bF3kxJjfl4E6_ffhHkry_AVhtEAHxQSk7xXN7uUoF0lNy3muDg2RgtygJZ3YsF9VE_aH1snQ2PiTsEB54FbXuAfSqN3juQ0B-9YzttIIMdHjaTu5ABZXnAZsEmmCo_Cli5_gD05",
     "keys": {
-        "p256dh": "BBXgZanbpPxzDi1iiO1b0U0pJHcxVhihbFQ3E3quNGYICopl4EoxZXN2k6r+reAiV5AZ+SwpiH/m8zIqguo4HRA=",
-        "auth": "cjkQtqgaS+eT9MY2vk8lMA=="
+        "p256dh": "BFOzzbO4Ygqheu/TBsBUptZJd+p+Rl1PcEZgGrVDQzkGSnsYOVv1msDKNdCR4mX+P8G8THIW3V9JaeKKwzQ+nXo=",
+        "auth": "bscvbUupL41EtCFrEUckbg=="
     }
 };
-
-var payload = "Selamat! Aplikasi Anda sudah dapat menerima push notifikasi!";
+var payload = 'Selamat! Aplikasi Anda sudah dapat menerima push notifikasi!';
 
 var options = {
-    gcmAPIKey: "472235424730",
+    gcmAPIKey: '453844431051',
     TTL: 60
 };
-
 webPush.sendNotification(
     pushSubscription,
     payload,

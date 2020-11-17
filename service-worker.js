@@ -1,98 +1,121 @@
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js');
 
-if (workbox){
+if (workbox) {
     console.log(`Workbox berhasil dimuat`);
+    ///Precaching App Shell
     workbox.precaching.precacheAndRoute([
-        { url: '/', revision: '2' },
-        { url: '/manifest.json', revision: '4' },
-        { url: '/index.html', revision: '4' },
-        { url: '/nav.html', revision: '4' },
-        { url: '/detailPlayer.html', revision: '4' },
-        { url: '/pages/favorites.html', revision: '4' },
-        { url: '/pages/home.html', revision: '4' },
-        { url: '/pages/matches.html', revision: '4' },
-        { url: '/pages/tentang.html', revision: '4' },
-        { url: '/css/materialize.min.css', revision: '4' },
-        { url: '/css/style.css', revision: '4' },
-        { url: '/js/api.js', revision: '4' },
-        { url: '/js/db.js', revision: '4' },
-        { url: '/js/helpers.js', revision: '4' },
-        { url: '/js/idb.js', revision: '4' },
-        { url: '/js/matches.js', revision: '4' },
-        { url: '/js/materialize.min.js', revision: '4' },
-        { url: '/js/myScript.js', revision: '4' },
-        { url: '/js/nav.js', revision: '4' },
-        { url: '/js/standings.js', revision: '4' },
-        { url: '/js/teams.js', revision: '4' },
-        { url: '/images/icons/laliga64.png', revision: '4' },
-        { url: '/images/icons/laliga96.png', revision: '4' },
-        { url: '/images/icons/facebook64.png', revision: '4' },
-        { url: '/images/icons/twitter64.png', revision: '4' },
-        { url: '/images/icons/instagram64.png', revision: '4' },
-        ]);
-
+        { url: '/', revision: '4' },
+        { url: '/nav.html', revision: '1' },
+        { url: '/index.html', revision: '1' },
+        { url: '/detailKlub.html', revision: '1' },
+        { url: '/pages/home.html', revision: '1' },
+        { url: '/pages/tentang.html', revision: '1' },
+        { url: '/pages/favKlub.html', revision: '1' },
+        { url: '/css/materialize.min.css', revision: '1' },
+        { url: '/css/materialize.css', revision: '1' },
+        { url: '/js/materialize.min.js', revision: '1' },
+        { url: '/js/materialize.js', revision: '1' },
+        { url: '/js/nav.js', revision: '1' },
+        { url: '/js/api.js', revision: '1' },
+        { url: '/js/control-db.js', revision: '1' },
+        { url: '/js/register.js', revision: '1' },
+        { url: '/js/db.js', revision: '1' },
+        { url: '/js/idb.js', revision: '1' },
+        { url: '/img/maskable_icon.png', revision: '1' },
+        { url: '/img/icon1-512.png', revision: '1' },
+        { url: '/manifest.json', revision: '1' },
+        { url: 'https://fonts.googleapis.com/icon?family=Material+Icons', revision: '3' },
+        { url: 'https://fonts.gstatic.com/s/materialicons/v48/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2', revision: '3' },
+        { url: 'https://unpkg.com/snarkdown@1.0.2/dist/snarkdown.umd.js', revision: '3' },
+    ], {
+    ignoreUrlParametersMatching: [/.*/]
+});
+// Database offline workbox data info klub
+workbox.routing.registerRoute(
+    /^https:\/\/api\.football-data\.org/,
+   workbox.strategies.staleWhileRevalidate({
+        cacheName: "Bundesliga",
+    })
+)
+// Database offline workbox untuk gambar
     workbox.routing.registerRoute(
-        /.*(?:png|svg|)$/,
+        /.*(?:png|gif|jpg|jpeg|svg)$/,
         workbox.strategies.cacheFirst({
             cacheName: 'images-cache',
             plugins: [
-            new workbox.cacheableResponse.Plugin({
-                statuses: [0, 200]
-            }),
-            new workbox.expiration.Plugin({
-                maxEntries: 80,
-                maxAgeSeconds: 30 * 24 * 60 * 60,
-            }),
+                new workbox.cacheableResponse.Plugin({
+                    statuses: [0, 200]
+                }),
+                new workbox.expiration.Plugin({
+                    maxEntries: 70,
+                    maxAgeSeconds: 30 * 24 * 60 * 60,
+                }),
             ]
         })
-        );
+    );
 
-
+   // Menyimpan file js dan css
     workbox.routing.registerRoute(
-        new RegExp('https://api.football-data.org/'),
-        workbox.strategies.staleWhileRevalidate()
-        )
+        /\.(?:js|css)$/,
+        new workbox.strategies.StaleWhileRevalidate({
+          cacheName: 'static-resources',
+        })
+      );
 
+    // Menyimpan cache dari CSS Google Fonts
+    workbox.routing.registerRoute(
+        /^https:\/\/fonts\.googleapis\.com/,
+        workbox.strategies.staleWhileRevalidate({
+            cacheName: 'google-fonts-stylesheets',
+        })
+    );
 
-workbox.routing.registerRoute(
-  /\.(?:js|css)$/,
-  new workbox.strategies.StaleWhileRevalidate({
-    cacheName: 'static-resources',
-  })
-);
-
-workbox.routing.registerRoute(
-  new RegExp('/pages/'),
-    workbox.strategies.staleWhileRevalidate({
-        cacheName: 'pages'
-    })
-);
-
-}else{
-  console.log(`Workbox gagal dimuat`);
+    // Menyimpan cache untuk file font
+    workbox.routing.registerRoute(
+        /^https:\/\/fonts\.gstatic\.com/,
+        workbox.strategies.cacheFirst({
+            cacheName: 'google-fonts-webfonts',
+            plugins: [
+                new workbox.cacheableResponse.Plugin({
+                    statuses: [0, 200],
+                }),
+                new workbox.expiration.Plugin({
+                    maxAgeSeconds: 60 * 60 * 24 * 365,
+                    maxEntries: 30,
+                }),
+            ],
+        })
+    );
+    // Menyimpan pages
+    workbox.routing.registerRoute(
+        new RegExp('/pages/'),
+        workbox.strategies.staleWhileRevalidate({
+            cacheName: 'pages',
+        })
+        
+    );
+// notif workbox gagal digunakan
+} else {
+    console.log(`Workbox gagal dimuat`);
 }
-
-// Response Push Notifikasi
-self.addEventListener("push", function(event) {
+// push notifikasi 
+self.addEventListener('push', function(event) {
     var body;
-    
     if (event.data) {
         body = event.data.text();
     } else {
-        body = "Push message no payload";
+        body = 'Push message no payload';
     }
-
     var options = {
         body: body,
-        icon: "images/icons/laliga512.png",
+        icon: 'img/icon.png',
         vibrate: [100, 50, 100],
         data: {
-            dateOfArrival: Date.now(),
-            primaryKey: 1
+        dateOfArrival: Date.now(),
+        primaryKey: 1
         }
     };
-
     event.waitUntil(
-        self.registration.showNotification("Push Notification", options)
+        self.registration.showNotification('Push Notification', options)
     );
 });

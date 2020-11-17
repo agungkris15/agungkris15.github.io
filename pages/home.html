@@ -1,12 +1,27 @@
+<h4 style="text-align: center; font-weight: bold;">Klasemen - LIGA JERMAN</h4>
 <div class="row">
-    <div class="col s6">
-        <h4>Klasemen</h4>
-    </div>
-      <div class="col s6">
-        <img src="images/icons/laliga64.png" alt="la liga" />
-      </div>
-    
-    <div class="col s12 m12 l12" id="standings">
-        
+   
+    <div class="col s12 progress" id="progress">
+		<div class="indeterminate  red"></div>
+	</div>
+    <div class="col s12">
+        <table class="highlight responsive-table centered">
+            <thead>
+                <tr class="red darken-1 z-depth-6 white-text">
+                    <th>Posisi</th>
+                    <th>Klub</th>
+                    <th>Main</th>
+                    <th>Menang</th>
+                    <th>Seri</th>
+                    <th>Kalah</th>
+                    <th>GF</th>
+                    <th>GA</th>
+                    <th>GD</th>
+                    <th>Poin</th>
+                </tr>
+            </thead>
+            <tbody id="standings"></tbody>
+            <!--Data klasemen dari Api-->
+        </table>
     </div>
 </div>

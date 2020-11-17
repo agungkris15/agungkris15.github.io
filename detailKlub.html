@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Bundesliga pwa</title>
+    <meta name="theme-color" content="#e53935"/>
+    <meta name="description" content="Aplikasi Football Info"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/materialize.min.css">
+    <link rel="manifest" href="/manifest.json">  
+    <link rel="shortcut icon" href="img/maskable_icon.png">
+    <link rel="apple-touch-icon" href="img/maskable_icon.png">  
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/snarkdown@1.0.2/dist/snarkdown.umd.js"></script>
+    <script src="js/materialize.min.js"></script>
+    <script src="js/api.js"></script>
+</head>
+<body>
+    <!--Navigation-->
+    <nav class="red darken-1" role="navigation">
+        <div class="nav-wrapper container">
+            <a href="./index.html" class="brand-logo" id="logo-container" style="font-weight: bold;">BUNDESLIGA</a>
+            <a href="./index.html" class="sidenav-trigger" data-target="nav-mobile">
+                <i class="material-icons">arrow_back</i>
+            </a>
+            
+            <ul class="topnav left hide-on-med-and-down"></ul>
+            <ul class="sidenav" id="nav-mobile"></ul>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="container" id="body-content">
+        <div class="row">
+            <div class="col s12 m12">
+                <h4 style="text-align: center; font-weight: bold;">Detail Informasi Klub</h4>
+                <div class="col s12 progress" id="progress">
+                    <div class="indeterminate  red darken-4"></div>
+                </div>
+                <hr>
+                <div id="detailHTML">
+                    <!-- ambil dari API -->
+                </div>
+                <!-- button -->
+                <div class="center-align">
+                    <a class="waves-effect waves-light btn-large green darken-2" id="save">TAMBAHKAN KE FAVORITE</a>
+                </div>        
+                <div class="center-align">
+                    <a class="waves-effect waves-light btn-large red" id="delete">HAPUS DARI FAVORITE</a>
+                </div>
+                <!-- End button -->
+                <table  class="striped">
+                    <thead>
+                        <tr>
+                            <th class="center-align">No</th>
+                            <th class="center-align">Nama Pemain</th>
+                            <th class="center-align">Posisi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="squad"></tbody>
+                    <!--Ambil dari Api-->
+                </table>
+            </div>
+        </div>
+    </div>
+    <footer class="page-footer red darken-1">
+        <div class="center-align">
+         Copyright &copy;  - All Rights Reserved
+       </div>
+     </footer>
+    <!-- End Content -->
+    
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script type="text/javascript" src="js/register.js"></script>
+    <script type="text/javascript" src="js/idb.js"></script>
+    <script type="text/javascript" src="js/db.js"></script>
+    <script type="text/javascript" src="js/control-db.js"></script>
+</body>
+</html>

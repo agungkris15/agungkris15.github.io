@@ -1,72 +1,67 @@
-function cekDatabase(idb) {
-    let dbPromised = idb.open("La-Liga", 1, function(upgradeDb) {    
-        if (!upgradeDb.objectStoreNames.contains(storeNameTeam)) {
-            var teamsObjectStore = upgradeDb.createObjectStore(storeNameTeam, {
-                keypath: "id"
-            });
-            
-            teamsObjectStore.createIndex("team_name", "name", {
-                unique: false
-            });
-        }
-
-        if (!upgradeDb.objectStoreNames.contains(storeNameMatch)) {
-            var matchObjectStore = upgradeDb.createObjectStore(storeNameMatch, {
-                keypath: "id"
-            });
-
-            matchObjectStore.createIndex("home_team", "match.homeTeam.name", {
-                unique: false
-            });
-
-            matchObjectStore.createIndex("away_team", "match.awayTeam.name", {
-                unique: false
-            });
-        }
-
-        if (!upgradeDb.objectStoreNames.contains(storeNamePlayer)) {
-            var playerObjectStore = upgradeDb.createObjectStore(storeNamePlayer, {
-                keypath: "id"
-            });
-
-            playerObjectStore.createIndex("player_name", "name", {
-                unique: false
-            });
-        }
+var dbPromised = idb.open('Klub-Bundesliga', 1, upgradeDb => {
+    var teamObjectStore = upgradeDb.createObjectStore('favKlub', {
+        keyPath: 'id'
     });
+    teamObjectStore.createIndex('namaTeam', 'name', { unique: false});
+});
 
-    return dbPromised;
-}
-
-function addToFavorite(data, storeName) {
-    var dataPrimaryKey;
-    if (storeName == storeNameTeam) {
-        dataPrimaryKey = data.id;        
-    }
-    else if (storeName == storeNameMatch) {
-        dataPrimaryKey = data.match.id;
-    }
-    else if (storeName == storeNamePlayer) {
-        dataPrimaryKey = data.id;
-    }
-
-    cekDatabase(idb)
-        .then(function(db) {
-            var tx = db.transaction(storeName, "readwrite");
-            var store = tx.objectStore(storeName);
-            
-            store.put(data, dataPrimaryKey);
-
-            return tx.complete;
-        })
-        .then(function() {
-            M.toast({
-                html: "Berhasil ditambahkan ke favorite",
-            });
+// SAVE DATA FAVORITE
+function saveDBFav(data) {
+    dbPromised.then(function(db) {
+        var tx = db.transaction('favKlub', 'readwrite');
+        var dataSave = {
+            id: data.id,
+            crestUrl : data.crestUrl,
+            name: data.name,
+            venue: data.venue,
+            website: data.website,
+            founded: data.founded,
+        };
+        tx.objectStore('favKlub').put(dataSave);
+        return tx.complete;
+    }).then(function() {
+        M.toast({
+            html: "Berhasil ditambahkan difavorite",
         });
+    }).catch(function(err) {
+        console.log(err);
+    })
 }
 
-function removeFromFavorites(ID, storeName) {
+//PERIKSA DATA FAVORITE
+function cekDataKlub(id) {
+    return new Promise(function (resolve, reject) {
+        dbPromised.then(function (db) {
+            var tx = db.transaction('favKlub', "readonly");
+            var store = tx.objectStore('favKlub');
+            return store.get(id);
+        })
+        .then(function (data) {
+            if (data != undefined) {
+                resolve(true)
+            }else {
+                reject(false);
+            }
+        });
+    });
+}
+// DELETE DATA FAVORITE
+function deleteDBFav(data) {
+    dbPromised.then(function(db) {
+        var tx = db.transaction('favKlub', 'readwrite');
+        var store = tx.objectStore('favKlub');        
+        store.delete(data);
+        return tx.complete;
+        
+    }).then(function() {
+        M.toast({
+            html: "Berhasil dihapus dari favorite",
+        });
+    }).catch(function(err) {
+        console.log(err);
+    })
+}
+function removeFromFavorites(ID) {
     console.log(ID + " " + storeName);
     cekDatabase(idb)
         .then(function(db) {
@@ -86,31 +81,17 @@ function removeFromFavorites(ID, storeName) {
     location.reload();
 }
 
-function getAllFavorites(storeName) {
-    return new Promise(function(resolve, reject) {
-        cekDatabase(idb)
-            .then(function(db) {
-                var tx = db.transaction(storeName, "readonly");
-                var store = tx.objectStore(storeName);
-                
+
+// Data favorite
+function getAllDataFavorit() {
+    return new Promise(function (resolve) {
+        dbPromised
+            .then(function (db) {
+                var tx = db.transaction('favKlub', "readonly");
+                var store = tx.objectStore('favKlub');
                 return store.getAll();
             })
-            .then(function(data) {
-                resolve(data);
-            });
-    });
-}
-
-function getById(ID, storeName) {
-    return new Promise(function(resolve, reject) {
-        cekDatabase(idb)
-            .then(function(db) {
-                var tx = db.transaction(storeName, "readonly");
-                var store = tx.objectStore(storeName);
-
-                return store.get(ID);
-            })
-            .then(function(data) {
+            .then(function (data) {
                 resolve(data);
             });
     });
