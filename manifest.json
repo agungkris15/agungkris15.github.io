@@ -4,7 +4,7 @@
     "description": "Aplikasi football info",
     "start_url": "/index.html",
     "display": "standalone",
-    "background_color": "#e53935 ",
+    "background_color": "#e53935",
     "theme_color": "#e53935",
     "icons": [
         {
